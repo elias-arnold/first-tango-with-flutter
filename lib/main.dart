@@ -1,4 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
+import "hal_entry.dart";
 
 void main() {
   runApp(const MyApp());
@@ -13,18 +18,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Elias Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.amber,
       ),
-      home: const MyHomePage(title: 'Elias\' Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Elias Fluff'),
     );
   }
 }
@@ -49,6 +45,28 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  late Future<dynamic> data;
+
+  Future<dynamic> fetchData() async {
+    final response = await http
+        .get(Uri.parse('https://jsonplaceholder.typicode.com/albums/1'));
+
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      return jsonDecode(response.body);
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to load album');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    this.data = fetchData();
+  }
 
   void _incrementCounter() {
     setState(() {
@@ -102,6 +120,10 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headline4,
             ),
+            ElevatedButton(
+                onPressed: () => Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) => HalEntry())),
+                child: const Text('Hallo'))
           ],
         ),
       ),
