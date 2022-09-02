@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import "hal_entry.dart";
+import 'model/hal_model_v2.dart';
 
 void main() {
   runApp(const MyApp());
@@ -49,12 +51,15 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<dynamic> fetchData() async {
     final response = await http
-        .get(Uri.parse('https://jsonplaceholder.typicode.com/albums/1'));
+        .get(Uri.parse('https://discovery.teamsprint.cloud/v1/client'), headers: {'X-Auth-Token': 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzb3N1YWRtaW4iLCJyb2xlIjoiQURNSU4iLCJ2aXNpYmlsaXR5IjoicHJpdmF0ZSIsImxvZ2luIjoic29zdWFkbWluIiwiZXhwIjoxNjYzNjc1NzEwLCJpYXQiOjE2NTU4OTk3MTB9.m9voLP5cROIIFfzfA7KP0NnMilGeZbQzb6s9r48nV1ZIZUHSou7hUf0ajVyPzAtvhaIozV-h5gg7mB5_3EFOHQ'});
 
     if (response.statusCode == 200) {
+
       // If the server did return a 200 OK response,
       // then parse the JSON.
-      return jsonDecode(response.body);
+      // debugPrint(response.body);
+      HalRequestResult result = HalRequestResult.fromJson(jsonDecode(response.body));
+      return result;
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
