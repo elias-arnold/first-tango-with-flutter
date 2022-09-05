@@ -1,4 +1,4 @@
-class HalPagedModel<C extends HalElement> {
+class HalPagedModel<C implements fromJson> {
   Page page;
   Map<String, HalLink> _links;
   Map<String, List<C>> _embedded;

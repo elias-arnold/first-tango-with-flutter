@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 
 import "hal_entry.dart";
 import 'model/hal_model_v2.dart';
+import 'model/hal_model_v3.dart';
 
 void main() {
   runApp(const MyApp());
@@ -58,7 +59,8 @@ class _MyHomePageState extends State<MyHomePage> {
       // If the server did return a 200 OK response,
       // then parse the JSON.
       // debugPrint(response.body);
-      HalRequestResult result = HalRequestResult.fromJson(jsonDecode(response.body));
+      ClientHalRequest result = ClientHalRequest(jsonDecode(response.body));
+      debugPrint(result.toString());
       return result;
     } else {
       // If the server did not return a 200 OK response,
